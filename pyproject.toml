@@ -15,6 +15,7 @@ langchain-openai = "*"
 grandalf = "*"
 langchain-community = "*"
 langgraph = "*"
+langchain-core = "^0.3.19"
 
 
 [build-system]
