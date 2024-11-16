@@ -1,16 +1,18 @@
 from typing import List
+
 from dotenv import load_dotenv
+
 load_dotenv()
 from langchain_core.messages import BaseMessage, ToolMessage
 from langgraph.graph import END, MessageGraph
 
-from chains import revisor, first_responder
-from tool_executor import execute_tools
+from chains import first_responder, revisor
+from tool_executor import tool_node
 
 MAX_ITERATIONS = 2
 builder = MessageGraph()
 builder.add_node("draft", first_responder)
-builder.add_node("execute_tools", execute_tools)
+builder.add_node("execute_tools", tool_node)
 builder.add_node("revise", revisor)
 builder.add_edge("draft", "execute_tools")
 builder.add_edge("execute_tools", "revise")
@@ -28,8 +30,8 @@ builder.add_conditional_edges("revise", event_loop)
 builder.set_entry_point("draft")
 graph = builder.compile()
 
-#print(graph.get_graph().draw_mermaid())
-#print(graph.get_graph().draw_ascii())
+# print(graph.get_graph().draw_mermaid())
+# print(graph.get_graph().draw_ascii())
 
 graph.get_graph().draw_mermaid_png(output_file_path="graph.png")
 
